@@ -2,7 +2,7 @@
 function BadgrXBlock(runtime, element, data) {
 
     var user = data.user
-    var my_url = '/api/grades/v0/course_grade/' + data.course_id + '/users/?username=' + user
+    var my_url = '/api/grades/v1/gradebook/' + data.course_id + '/?username=' + user
     var section_title = data.section_title;
     var pass_mark = data.pass_mark;
     var award_message = data.award_message;
@@ -14,49 +14,55 @@ function BadgrXBlock(runtime, element, data) {
 
 
     function getGrades(data) {
-        var section_scores = data['section_scores'];
+        var section_scores = data['section_breakdown'];
+        var is_this_section = false;
         // Check that the section name specified in Xblock exists in Grades report
-        if (section_scores.hasOwnProperty(section_title)) {
-            var this_section = section_scores[String(section_title)];
-            var section_title_id = '#' + section_title
-            if ( parseFloat(this_section) >= pass_mark) {
-                $.ajax({
+        for(let i = 0; i < section_scores.length; i++) {
+            var this_section = section_scores[i];
+            if (this_section['subsection_name'] == section_title) {
+                var section_title_id = '#' + section_title
+                if ( parseFloat(this_section['score_earned']) >= pass_mark) {
+                    $.ajax({
+                        type: "POST",
+                        url: handlerUrl,
+                        data:JSON.stringify({"name": "badgr"}),
+                        success: function(json) {
+                                // Just reload the page, the correct html with the badge will be displayed
+                                var onlyUrl = location.href.replace(location.search,'');
+                                window.location = onlyUrl;
+                                return false;
+                        },
+                        error : function(xhr,errmsg,err) {
+                            $('.badge-loader').hide();
+                            $('#lean_overlay').hide();
+                            $('#check-for-badge').remove();
+                            $('#results').html("<div>Oops! We have encountered an error, the badge " + 
+                            '"' +  badge_slug + '"' +  " does not exist. Please contact your support administrator."+
+                            "</div>"); // add the error to the dom
+                            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                        }
+                    });
+                }
+                else {
+                    $.ajax({
                     type: "POST",
-                    url: handlerUrl,
+                    url: noAwardUrl,
                     data:JSON.stringify({"name": "badgr"}),
                     success: function(json) {
-                            // Just reload the page, the correct html with the badge will be displayed
-                            var onlyUrl = location.href.replace(location.search,'');
-                            window.location = onlyUrl;
-                            return false;
-                    },
-                    error : function(xhr,errmsg,err) {
                         $('.badge-loader').hide();
                         $('#lean_overlay').hide();
+                        var $motivation = $('<p class="badgr-motivation">' 
+                        + motivation_message + '</p>' );
+                        $('.badgr_block').append($motivation);
                         $('#check-for-badge').remove();
-                        $('#results').html("<div>Oops! We have encountered an error, the badge " + 
-                        '"' +  badge_slug + '"' +  " does not exist. Please contact your support administrator."+
-                        "</div>"); // add the error to the dom
-                        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-                    }
-                });
-            }
-            else {
-                $.ajax({
-                type: "POST",
-                url: noAwardUrl,
-                data:JSON.stringify({"name": "badgr"}),
-                success: function(json) {
-                    $('.badge-loader').hide();
-                    $('#lean_overlay').hide();
-                    var $motivation = $('<p class="badgr-motivation">' 
-                    + motivation_message + '</p>' );
-                    $('.badgr_block').append($motivation);
-                    $('#check-for-badge').remove();
-                    }
-                });
-            }
-        } else {
+                        }
+                    });
+                }
+                is_this_section = true;
+                break;
+            } 
+        }
+        if(!is_this_section) {
             $('.badge-loader').hide();
             $('#lean_overlay').hide();
             alert(
