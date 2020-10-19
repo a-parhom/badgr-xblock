@@ -38,7 +38,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Issuer name",
         help="must be lower case unique name.",
         scope=Scope.settings,
-        default=settings.BADGR_ISSUER_SLUG
+        default=u"prometheus"
     )
 
     badge_slug = String(
@@ -147,6 +147,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         'display_name',
         'description',
         'criteria',
+        'issuer_slug',
         'badge_slug',
         'badge_name', 
         'pass_mark',
@@ -201,7 +202,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         badge_class = badge_service.get_badge_class(
             slug=self.badge_slug,
             issuing_component=self.issuer_slug,
-            slug_badgr=self.badge_slug,
             course_id=self.runtime.course_id,
             display_name=self.badge_name,
             description=self.description,
