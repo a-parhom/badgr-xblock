@@ -29,7 +29,7 @@ setup(
         'badgr',
     ],
     install_requires=[
-        'XBlock==1.0.0',
+        'XBlock',
     ],
     entry_points={
         'xblock.v1': [
