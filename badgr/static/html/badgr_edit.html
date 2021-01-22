@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load l10n %}
 <div class="editor-with-buttons">
   <div class="wrapper-comp-settings is-active editor-with-buttons" id="settings-tab">
     <ul class="list-input settings-list">
@@ -50,7 +51,7 @@
                 {% if field.step %} step="{{field.step}}" {% elif field.type == "integer" %} step=1 {% endif %}
                 {% if field.max %} max="{{field.max}}" {% endif %}
                 {% if field.min %} min="{{field.min}}" {% endif %}
-                value="{{field.value|default_if_none:""}}"
+                {% if field.type == "float" %} value="{{field.value|unlocalize|default_if_none:""}}" {% else %} value="{{field.value|default_if_none:""}}" {% endif %}
               >
             {% elif field.type == "text" or field.type == "html" %}
               <textarea class="field-data-control" data-field-name="{{field.name}}" id="xb-field-edit-{{field.name}}" rows=10 cols=70>{{field.value}}</textarea>
