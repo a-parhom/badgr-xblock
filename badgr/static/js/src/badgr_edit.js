@@ -171,4 +171,10 @@ function StudioEditableXBlockMixin(runtime, element, data) {
         e.preventDefault();
         runtime.notify('cancel', {});
     });
+
+    var section_title = $(element).find('#xb-field-edit-section_title').val();
+    if(section_title=="Section") {
+        var the_title = $('header nav ol li:nth-child(2) span.title').text();
+        $(element).find('#xb-field-edit-section_title').val(the_title);
+    }
 }

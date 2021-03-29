@@ -31,7 +31,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Display Name",
         help="This name appears in the horizontal navigation at the top of the page.",
         scope=Scope.settings,
-        default=u"Badgr"
+        default=u"Відзнака \"\""
     )
 
     issuer_slug = String(
@@ -52,7 +52,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Badge display name",
         help="Badge name that appears in Accomplishments tab",
         scope=Scope.settings,
-        default=u"Module 1 Badge"
+        default=u"Відзнака \"\""
     )
 
     image_url = String(
@@ -65,14 +65,14 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Criteria",
         help="How does one earn this badge?",
         scope=Scope.settings,
-        default=u"Achieve a pass mark of 80% percent or more for course module 1"
+        default=u""
     )
 
     description = String(
         display_name="Description",
         help="What is this badge",
         scope=Scope.settings,
-        default=u"A Shiny badge, given to exceptional students"
+        default=u""
     )
 
     section_title = String(
@@ -109,21 +109,21 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     award_message = String(
         display_name='Award message',
-        default=u'Well done you are an all star!',
+        default=u'Вітаємо! Ви отримали відзнаку ""',
         scope=Scope.settings,
         help='Message the user will see upon receiving a badge',
     )
 
     motivation_message = String(
         display_name='Motivational message',
-        default = u"Don't worry, you will have another opportunity to earn a badge.",
+        default = u"Відзнака надається лише за умови повного і правильного виконання завдання. Перезавантажте сторінку, щоб розпочати знову.",
         scope=Scope.settings,
         help='Message the user will see if they do not quailify for a badge'
     )
 
     button_text = String(
         display_name='Button text',
-        default = u"Click here to view your results.",
+        default = u"Натисніть тут, щоб отримати відзнаку",
         scope=Scope.settings,
         help='Text appearing on button'
     )
